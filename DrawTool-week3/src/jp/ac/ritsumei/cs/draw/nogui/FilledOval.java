@@ -25,7 +25,9 @@ public class FilledOval extends Oval {
     
     @Override
     public Figure createClone() {
-    	// Change code here
-    	return null;
+    	Figure foval = new FilledOval();
+    	foval.setStart(startX, startY);
+    	foval.setEnd(endX, endY);
+    	return foval;
     }
 }

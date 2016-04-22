@@ -38,7 +38,8 @@ public abstract class Figure {
      * @param y the y-coordinate of the start point
      */
     public void setStart(int x, int y) {
-    	// Insert code here
+    	startX = x;
+    	startY = y;
     }
     
     /**
@@ -47,7 +48,8 @@ public abstract class Figure {
      * @param y the y-coordinate of the end point
      */
     public void setEnd(int x, int y) {
-    	// Insert code here
+    	endX = x;
+    	endY = y;
     }
     
     /**
@@ -55,8 +57,7 @@ public abstract class Figure {
      * @return the left-most x-coordinate
      */
     public int getLeft() {
-    	// Change code here
-    	return 0;
+    	return Math.min(startX, endX);
     }
     
     /**
@@ -64,8 +65,7 @@ public abstract class Figure {
      * @return the right-most x-coordinate
      */
     public int getRight() {
-    	// Change code here
-    	return 0;
+    	return Math.max(startX, endX);
     }
     
     /**
@@ -73,8 +73,7 @@ public abstract class Figure {
      * @return the top-most y-coordinate
      */
     public int getTop() {
-    	// Change code here
-        return 0;
+        return Math.min(startY, endY);
     }
     
     /**
@@ -82,8 +81,7 @@ public abstract class Figure {
      * @return the bottom-most y-coordinate
      */
     public int getBottom() {
-    	// Change code here
-        return 0;
+        return Math.max(startY, endY);
     }
     
     /**
@@ -91,8 +89,7 @@ public abstract class Figure {
      * @return the width
      */
     public int getWidth() {
-    	// Change code here
-        return 0;
+        return Math.abs(startX - endX);
     }
     
     /**
@@ -100,8 +97,7 @@ public abstract class Figure {
      * @return the height
      */
     public int getHeight() {
-    	// Change code here
-        return 0;
+        return Math.abs(startY - endY);
     }
     
     /**

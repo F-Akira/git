@@ -25,7 +25,9 @@ public class Oval extends Figure {
     
     @Override
     public Figure createClone() {
-    	// Change code here
-        return null;
+    	Figure oval = new Oval();
+    	oval.setStart(startX, startY);
+    	oval.setEnd(endX, endY);
+        return oval;
     }
 }

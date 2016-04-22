@@ -25,7 +25,9 @@ public class Line extends Figure {
     
     @Override
     public Figure createClone() {
-    	// Change code here
-        return null;
+    	Figure line = new Line();
+    	line.setStart(startX, startY);
+    	line.setEnd(endX, endY);
+        return line;
     }
 }

@@ -25,7 +25,9 @@ public class Rect extends Figure {
     
     @Override
     public Figure createClone() {
-    	// Change code here
-        return null;
+    	Figure rect = new Rect();
+    	rect.setStart(startX, startY);
+    	rect.setEnd(endX, endY);
+        return rect;
     }
 }

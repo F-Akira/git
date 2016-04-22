@@ -30,7 +30,7 @@ class Circle {
     }
     
     public int getX() {
-        return y;
+        return x;
     }
     
     public int getY() {

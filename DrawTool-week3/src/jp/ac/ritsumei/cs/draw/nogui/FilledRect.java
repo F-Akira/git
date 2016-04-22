@@ -25,7 +25,9 @@ public class FilledRect extends Rect {
     
     @Override
     public Figure createClone() {
-    	// Change code here
-    	return null;
+    	Figure frect = new FilledRect();
+    	frect.setStart(startX, startY);
+    	frect.setEnd(endX, endY);
+    	return frect;
     }
 }
