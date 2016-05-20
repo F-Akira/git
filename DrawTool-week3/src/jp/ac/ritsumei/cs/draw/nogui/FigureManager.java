@@ -2,6 +2,7 @@
 package jp.ac.ritsumei.cs.draw.nogui;
 
 import java.util.*;
+import java.io.*;
 
 public class FigureManager {
     
@@ -22,7 +23,7 @@ public class FigureManager {
      */
     public List<Figure> getFigures() {
     	// Change code here
-        return null;
+        return figures;
     }
     
     /**
@@ -30,7 +31,7 @@ public class FigureManager {
      * @param figure the figure to be added
      */
     public void add(Figure figure) {
-    	// Insert code here
+    	figures.add(figure);
     }
     
     /**
@@ -38,14 +39,14 @@ public class FigureManager {
      * @param figure the figure to be removed
      */
     public void remove(Figure figure) {
-    	// Insert code here
+    	figures.remove(figure);
     }
     
     /**
      * Removes all the figures in the collection managed by this manager.
      */
     public void clear() {
-    	// Insert code here
+    	figures.clear();
     }
     
     /**
@@ -78,8 +79,12 @@ public class FigureManager {
      * @return the created figure, or <code>null</code> if the given kind is invalid
      */
     public Figure createFigure(String kind, int x1, int y1, int x2, int y2) {
-    	// Change code here
-        return null;
+    	Figure figure = createFigure(kind);
+        if (figure != null) {
+        	figure.setStart(x1, y1);
+        	figure.setEnd(x2, y2);
+        }
+        return figure;
     }
     
     /**
@@ -88,7 +93,17 @@ public class FigureManager {
      * @return <code>true</code> if the storing was successful, otherwise <code>false</code>
      */
     public boolean store(String filename) {
-    	// Change code here
+    	try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(filename)))) {    		
+    		figures.forEach(fig -> pw.println(fig.getName() + " "
+    										  + fig.startX + " "
+    										  + fig.startY + " "
+    										  + fig.endX + " "
+    										  + fig.endY + " "));
+    		return true;
+    	}
+    	catch (IOException e) {
+    		System.err.println("Cannot Write: " + filename);
+    	}
         return false;
     }
     
@@ -98,7 +113,27 @@ public class FigureManager {
      * @return <code>true</code> if the loading was successful, otherwise <code>false</code>
      */
     public boolean load(String filename) {
-    	// Change code here
+    	try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+    		String line;
+    		while ((line = br.readLine()) != null) {
+    			StringTokenizer st = new StringTokenizer(line);
+    			String name = st.nextToken();
+    			int x1 = Integer.parseInt(st.nextToken());
+    			int y1 = Integer.parseInt(st.nextToken());
+    			int x2 = Integer.parseInt(st.nextToken());
+    			int y2 = Integer.parseInt(st.nextToken());
+    			
+    			Figure figure = createFigure(name, x1, y1, x2, y2);
+    			add(figure);
+    		}
+    		return true;
+    	}
+    	catch (FileNotFoundException e){
+    		System.out.println("File Not Found: " + filename);
+    	}
+    	catch (IOException e) {
+    		System.out.println("Cannot read: " + filename);
+    	}
         return false;
     }
 }
