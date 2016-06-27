@@ -1,5 +1,6 @@
 package jp.ac.ritsumei.cs.draw;
 
+import java.io.File;
 import java.util.*;
 import javax.swing.*;
 
@@ -19,9 +20,14 @@ public class TabManager {
         createTab("Untitled", canvas);
 	}
 	
-    public void createTab(String title, DrawCanvas canvas) {
-    	tab.addTab(title, canvas);
-    	canvas.setFileName(title);
+    public void createTab(File file, DrawCanvas canvas) {
+    	tab.addTab(file.getName(), canvas);
+    	canvas.setFileName(file.getPath());
+    }
+    
+    public void createTab(String name, DrawCanvas canvas) {
+    	tab.addTab(name, canvas);
+    	canvas.setFileName(name);
     }
     
     public DrawCanvas getCanvas() {
@@ -30,6 +36,10 @@ public class TabManager {
     
     public DrawCanvas getCanvas(int index) {
     	return (DrawCanvas) tab.getComponentAt(index);
+    }
+    
+    public JTabbedPane getTab() {
+    	return tab;
     }
     
     public void changeLastTab() {
@@ -42,5 +52,9 @@ public class TabManager {
     
     public int getTabCount() {
     	return tab.getTabCount();
+    }
+    
+    public void setTabName(int index, String name) {
+    	tab.setTitleAt(index, name);
     }
 }

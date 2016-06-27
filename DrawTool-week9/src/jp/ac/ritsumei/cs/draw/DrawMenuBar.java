@@ -4,7 +4,6 @@ package jp.ac.ritsumei.cs.draw;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
-
 /**
  * A menu bar that contains menu items.
  */
@@ -16,6 +15,8 @@ public class DrawMenuBar extends JMenuBar {
      * The constant string indicating the name of an untitled file.
      */
     public static final String UNTITLED = "Untitled";
+
+	private static final String YES_NO_OPTION = null;
     
     /**
      * The application for a drawing tool.
@@ -149,10 +150,10 @@ public class DrawMenuBar extends JMenuBar {
                 return false;
         }
         
-        filename = file.getName();
+        filename = name;
         
         DrawCanvas newCanvas = new DrawCanvas(tool, tool.tabManager.selector);
-        tool.tabManager.createTab(filename, newCanvas);
+        tool.tabManager.createTab(file, newCanvas);
         tool.tabManager.changeLastTab();
         
         return true;
@@ -169,15 +170,19 @@ public class DrawMenuBar extends JMenuBar {
             return false;
         }
         
-        if (filename.equals(name)) {
-            int confirm = JOptionPane.showConfirmDialog(tool,
-              "The changes were made to this file. Do you want to re-open the file?",
-              "Select an Option", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.NO_OPTION) {
-                return false;
-            }
+        int index;
+        for(index = 0;index < tool.tabManager.getTabCount(); index++) {
+	        if (tool.tabManager.getCanvas(index).getFilename().equals(name)) {
+	            int confirm = JOptionPane.showConfirmDialog(tool,
+	              "The changes were made to this file. Do you want to re-open the file?",
+	              "Select an Option", JOptionPane.YES_NO_OPTION);
+	            if (confirm == JOptionPane.NO_OPTION) {
+	                return false;
+	            }
+	            tool.tabManager.getTab().remove(index);
+	            break;
+	        }
         }
-        
         DrawCanvas newCanvas = new DrawCanvas(tool, tool.tabManager.selector);
         boolean result = newCanvas.getFigureManager().load(name);
         if (!result) {
@@ -185,9 +190,9 @@ public class DrawMenuBar extends JMenuBar {
                 return false;
         }
         
-        filename = name;
+        filename = name; 
         
-        tool.tabManager.createTab(file.getName(), newCanvas);
+        tool.tabManager.createTab(file, newCanvas);
         tool.tabManager.changeLastTab();
         
         return true;
@@ -230,6 +235,7 @@ public class DrawMenuBar extends JMenuBar {
         
         filename = file.getName();
         if (saveFile(filename)) {
+        	tool.tabManager.setTabName(tool.tabManager.getTab().getSelectedIndex(), filename);
             canvas.setFileName(filename);
             return true;
         }
@@ -288,28 +294,33 @@ public class DrawMenuBar extends JMenuBar {
     	}
     }
     
-    void exitTool() {
-    	getCurrnetCanvas();
-        if (canvas.hasChanged()) {
-            int result = JOptionPane.showConfirmDialog(tool,
-              "Do you want to save the changes you have made to this file?");
-            
-            if (result == JOptionPane.CANCEL_OPTION) {
-                return;
-                
-            } else if (result == JOptionPane.YES_OPTION) {
-                if (!saveFile()) {
-                    int result2 = JOptionPane.showConfirmDialog(tool,
-                      "Do you want to close without saving the chages?");
-                    if (result2 == JOptionPane.CANCEL_OPTION) {
-                        return;
-                    }
-                }
-            }
+    boolean exitTool() {
+    	while (tool.tabManager.getTabCount() != 0) {
+    		tool.tabManager.getTab().setSelectedIndex(0);
+    		getCurrnetCanvas();
+    		
+	        if (canvas.hasChanged()) {
+	            int result = JOptionPane.showConfirmDialog(tool,
+	              "Do you want to save the changes you have made to this file?");
+	            if (result == JOptionPane.CANCEL_OPTION) {
+	            	return false;
+	            } else if (result == JOptionPane.YES_OPTION) {
+	                if (!saveFile()) {
+	                    int result2 = JOptionPane.showConfirmDialog(tool,
+	                      "Do you want to close without saving the chages?");
+	                    if (result2 == JOptionPane.CANCEL_OPTION) {
+	                        return false;
+	                    } else if (result2 == JOptionPane.NO_OPTION) {
+	                    	continue;
+	                    }
+	                }
+	            }
+	        }
+	    	canvas.stopAutoSave();
+	    	tool.tabManager.closeCurrentTab();
         }
-        
-        canvas.stopAutoSave();
-        
+    	tool.terminate();
+    	return true;
     }
     
     /**

@@ -62,7 +62,7 @@ public class DrawTool extends JFrame {
      */
     private void closeWindow() {
         if (menuBar != null) {
-            menuBar.closeFile();
+        	menuBar.exitTool();
         }
     }
     
@@ -77,6 +77,7 @@ public class DrawTool extends JFrame {
         Locale.setDefault(Locale.ENGLISH);
         final DrawTool main = new DrawTool("DrawTool");
         
+        main.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         main.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 main.closeWindow();
