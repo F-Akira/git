@@ -294,7 +294,10 @@ public class DrawMenuBar extends JMenuBar {
     	}
     }
     
-    boolean exitTool() {
+    /**
+     * Close this tool
+     */
+    void exitTool() {
     	while (tool.tabManager.getTabCount() != 0) {
     		tool.tabManager.getTab().setSelectedIndex(0);
     		getCurrnetCanvas();
@@ -303,13 +306,13 @@ public class DrawMenuBar extends JMenuBar {
 	            int result = JOptionPane.showConfirmDialog(tool,
 	              "Do you want to save the changes you have made to this file?");
 	            if (result == JOptionPane.CANCEL_OPTION) {
-	            	return false;
+	            	return;
 	            } else if (result == JOptionPane.YES_OPTION) {
 	                if (!saveFile()) {
 	                    int result2 = JOptionPane.showConfirmDialog(tool,
 	                      "Do you want to close without saving the chages?");
 	                    if (result2 == JOptionPane.CANCEL_OPTION) {
-	                        return false;
+	                        return;
 	                    } else if (result2 == JOptionPane.NO_OPTION) {
 	                    	continue;
 	                    }
@@ -320,7 +323,6 @@ public class DrawMenuBar extends JMenuBar {
 	    	tool.tabManager.closeCurrentTab();
         }
     	tool.terminate();
-    	return true;
     }
     
     /**
