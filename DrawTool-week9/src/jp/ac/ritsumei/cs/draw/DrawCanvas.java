@@ -153,6 +153,7 @@ public class DrawCanvas extends JPanel implements MouseListener, MouseMotionList
         setCurrentFigure(figureManager.createFigure(kind));
         getCurrentFigure().setStart(e.getX(), e.getY());
         getCurrentFigure().setEnd(e.getX(), e.getY());
+        getCurrentFigure().setColor(selector.getColorKind(), selector.getColorName());
         drawRubber(g, getCurrentFigure());
     }
     
@@ -225,7 +226,7 @@ public class DrawCanvas extends JPanel implements MouseListener, MouseMotionList
      * @param figure the figure to be drawn
      */
     private void drawFigure(Graphics g, Figure figure) {
-        Color c = g.getColor();
+        Color c = figure.SHAPE_COLOR;
         g.setPaintMode();
         figure.draw(g);
         g.setColor(c);

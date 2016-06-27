@@ -2,6 +2,7 @@
 package jp.ac.ritsumei.cs.draw;
 
 import java.util.*;
+import java.awt.Color;
 import java.io.*;
 
 /**
@@ -90,36 +91,44 @@ public class FigureManager {
         return figure;
     }
     
+    public Figure createFigure(String kind, int x1, int y1, int x2, int y2, String c) {
+        Figure figure = createFigure(kind);
+        if (figure != null) {
+            figure.setStart(x1, y1);
+            figure.setEnd(x2, y2);
+            figure.setColor(getColorKind(c), c);
+        }
+        return figure;
+    }
+    
+    Color getColorKind(String str) {
+    	switch (str) {
+    	case "red"	: return Color.red;
+    	case "green": return Color.green;
+    	case "blue"	: return Color.blue;
+    	default		: return Color.blue;
+    	}
+    }
+    
     /**
      * Stores information about all the figures into a file
      * @param filename the name of a file that intends to store the information
      * @return <code>true</code> if the storing was successful, otherwise <code>false</code>
      */
     public boolean store(String filename) {
-        PrintWriter pw = null;
-        
-        try {
-            pw = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
-            for (Figure figure : figures) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(figure.getName() + " ");
-                sb.append(String.valueOf(figure.startX) + " ");
-                sb.append(String.valueOf(figure.startY)+ " ");
-                sb.append(String.valueOf(figure.endX) + " ");
-                sb.append(String.valueOf(figure.endY));
-                
-                pw.println(sb.toString());
-            }
-        } catch (IOException e) {
-            System.err.println("Cannot write: " + filename);
-        } finally {
-            if (pw != null) {
-                pw.close();
-            } else {
-                return false;
-            }
-        }
-        return true;
+    	try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(filename)))) {    		
+    		figures.forEach(fig -> pw.println(fig.getName() + " "
+    										  + fig.startX + " "
+    										  + fig.startY + " "
+    										  + fig.endX + " "
+    										  + fig.endY + " "
+    										  + fig.colorS));
+    		return true;
+    	}
+    	catch (IOException e) {
+    		System.err.println("Cannot Write: " + filename);
+    	}
+        return false;
     }
     
     /**
@@ -128,42 +137,28 @@ public class FigureManager {
      * @return <code>true</code> if the loading was successful, otherwise <code>false</code>
      */
     public boolean load(String filename) {
-        figures.clear();
-        
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader(filename));
-            
-            String line;
-            while ((line = br.readLine()) != null) {
-                StringTokenizer st = new StringTokenizer(line);
-                String name = st.nextToken();
-                int x1 = Integer.parseInt(st.nextToken());
-                int y1 = Integer.parseInt(st.nextToken());
-                int x2 = Integer.parseInt(st.nextToken());
-                int y2 = Integer.parseInt(st.nextToken());
-                
-                Figure figure = createFigure(name, x1, y1, x2, y2);
-                add(figure);
-            }
-            
-        } catch (FileNotFoundException e) {
-            System.err.println("File Not Found: " + filename);
-            return false;
-        } catch (IOException e) {
-            System.err.println("Cannot read: " + filename);
-            return false;
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                } else {
-                    return false;
-                }
-            } catch (IOException e) {
-                return false;
-            }
-        }
-        return true;
+    	try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+    		String line;
+    		while ((line = br.readLine()) != null) {
+    			StringTokenizer st = new StringTokenizer(line);
+    			String name = st.nextToken();
+    			int x1 = Integer.parseInt(st.nextToken());
+    			int y1 = Integer.parseInt(st.nextToken());
+    			int x2 = Integer.parseInt(st.nextToken());
+    			int y2 = Integer.parseInt(st.nextToken());
+    			String color = st.nextToken();
+    			
+    			Figure figure = createFigure(name, x1, y1, x2, y2, color);
+    			add(figure);
+    		}
+    		return true;
+    	}
+    	catch (FileNotFoundException e){
+    		System.out.println("File Not Found: " + filename);
+    	}
+    	catch (IOException e) {
+    		System.out.println("Cannot read: " + filename);
+    	}
+        return false;
     }
 }

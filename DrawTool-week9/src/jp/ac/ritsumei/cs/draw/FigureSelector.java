@@ -15,6 +15,7 @@ public class FigureSelector extends JPanel {
      * The combo box for selecting the shape of a figure to be drawn.
      */
     private JComboBox<String> figureCombo;
+    private JComboBox<String> colorCombo;
     
     /**
      * Creates a new figure selector.
@@ -25,7 +26,7 @@ public class FigureSelector extends JPanel {
     }
     
     /**
-     * Creates the combo box for choosing the shape of a figure to be drawn.
+     * Creates the combo box for choosing the shape and the color of a figure to be drawn.
      */
     private void createComboBox() {
         JLabel shapeLabel = new JLabel("Shape:");
@@ -37,6 +38,14 @@ public class FigureSelector extends JPanel {
         figureCombo.addItem(Oval.name);
         figureCombo.addItem(FilledOval.name);
         add(figureCombo);
+        
+        JLabel colorLabel = new JLabel("color:");
+        add(colorLabel);
+        colorCombo = new JComboBox<String>();
+        colorCombo.addItem("red");
+        colorCombo.addItem("blue");
+        colorCombo.addItem("green");
+        add(colorCombo);
     }
     
     /**
@@ -44,6 +53,28 @@ public class FigureSelector extends JPanel {
      * @return the name string of the selected figure
      */
     String getFigureKind() {
-        return (String)figureCombo.getSelectedItem();
+        return (String) figureCombo.getSelectedItem();
+    }
+    
+    Color getColorKind() {
+    	switch (getColorName()) {
+    	case "red"	: return Color.red;
+    	case "green": return Color.green;
+    	case "blue"	: return Color.blue;
+    	default		: return Color.blue;
+    	}
+    }
+    
+    Color getColorKind(String s) {
+    	switch (s) {
+    	case "red"	: return Color.red;
+    	case "green": return Color.green;
+    	case "blue"	: return Color.blue;
+    	default		: return Color.blue;
+    	}
+    }
+    
+    String getColorName() {
+    	return (String) colorCombo.getSelectedItem();
     }
 }

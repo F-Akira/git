@@ -31,12 +31,14 @@ public abstract class Figure {
     /**
      * The constant value indicating the color of this figure.
      */
-    protected static final Color SHAPE_COLOR = Color.blue;
-    
+    protected Color SHAPE_COLOR = Color.blue;
+
     /**
      * The constant value indicating the color of a rubber representing this figure.
      */
     protected static final Color RUBBER_COLOR = Color.green;
+    
+    String colorS;
     
     /**
      * Creates a new, empty object.
@@ -197,4 +199,9 @@ public abstract class Figure {
      * @param g the graphics context
      */
     public abstract void drawRubber(Graphics g);
+    
+    public void setColor(Color c, String s) {
+    	SHAPE_COLOR = c;
+    	colorS = s;
+    }
 }
